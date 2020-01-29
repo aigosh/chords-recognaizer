@@ -1,1 +1,3 @@
 # chords-recognaizer-ui
+
+Awesome app is coming soon...

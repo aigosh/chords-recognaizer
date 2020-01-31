@@ -1,0 +1,12 @@
+Основная библиотека для работы со звуком:
+https://librosa.github.io/librosa/tutorial.html
+Различные методы выделения фичей:
+https://towardsdatascience.com/extract-features-of-music-75a3f9bc265d
+Архитектура нейронной сети на основе MFCC:
+https://medium.com/@mikesmales/sound-classification-using-deep-learning-8bc2aa1990b7
+Простое обяснение про природу звука и преобразование Фурье:
+https://zen.yandex.ru/media/easy_music/chastotnyi-spektr-ili-zachem-nam-riad-fure-5cfdf0d8dbeaba00b08b4a97
+Про быстрое преобразование Фурье:
+https://ru.wikipedia.org/wiki/%D0%91%D1%8B%D1%81%D1%82%D1%80%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%A4%D1%83%D1%80%D1%8C%D0%B5
+Про MFCC:
+https://habr.com/ru/post/140828/

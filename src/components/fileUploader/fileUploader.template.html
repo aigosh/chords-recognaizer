@@ -1,0 +1,12 @@
+<div class="dropzone"
+     [class.dropzone_active]="showDropzone">
+    <label for="file-uploader__input"
+           class="dropzone__text">
+        Drop files or click here to choose one
+    </label>
+    <input id="file-uploader__input"
+           name="file"
+           class="file-input"
+           type="file"
+           (change)="onSelectFiles($event)">
+</div>

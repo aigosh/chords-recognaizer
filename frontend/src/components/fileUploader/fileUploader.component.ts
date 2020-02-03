@@ -38,6 +38,7 @@ export class FileUploaderComponent {
     @HostListener('dragover', ['$event'])
     onDragOver(event: Event) {
         this.preventDefault(event);
+        this.toggleActive(true);
     }
 
     @HostListener('drop', ['$event'])

@@ -16,6 +16,7 @@
     align-items: center;
     border: transparent dashed 5px;
     opacity: inherit;
+    transition: border ease-in-out .3s;
 
     &_active {
         border: @color dashed 5px;
@@ -24,6 +25,11 @@
 
 .dropzone__text {
     cursor: pointer;
+    transition: transform ease-in-out .3s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
 }
 
 .file-input {

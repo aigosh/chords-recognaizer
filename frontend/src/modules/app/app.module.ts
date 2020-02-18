@@ -15,6 +15,8 @@ import {AppComponent} from './app.component';
 import {UniversalStorage} from '../shared/storage/universal.storage';
 // interceptors
 import {FileUploaderModule} from '../../components/fileUploader/fileUploader.module';
+import {RecorderModule} from '../../components/recorder/recorder.module';
+import {DropZoneModule} from '../../directives/dropZone/dropZone.module';
 
 export function initLanguage(translateService: TranslatesService): Function {
     return (): Promise<any> => translateService.initLanguage();
@@ -26,6 +28,8 @@ export function initLanguage(translateService: TranslatesService): Function {
         TransferHttpCacheModule,
         HttpClientModule,
         FileUploaderModule,
+        DropZoneModule,
+        RecorderModule,
         RouterModule,
         BrowserAnimationsModule,
         CookieModule.forRoot(),

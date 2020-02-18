@@ -1,4 +1,14 @@
 <div class="background"></div>
-<div class="wrapper">
-    <file-uploader class="file-uploader" (upload)="onUpload($event)"></file-uploader>
+<div #dropZone="dropZone"
+     dropZone
+     class="layout"
+     (dropZoneUpload)="onUpload($event)">
+    <div class="dropzone"
+         [class.dropzone_active]="dropZone.active">
+        <div class="dropzone__border"></div>
+    </div>
+    <div class="wrapper">
+        <recorder class="recorder"></recorder>
+        <file-uploader class="file-uploader" (upload)="onUpload($event)"></file-uploader>
+    </div>
 </div>

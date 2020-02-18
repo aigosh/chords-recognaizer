@@ -2,28 +2,10 @@
 
 :host {
     display: block;
-    box-sizing: border-box;
-    padding: 5px;
     color: @color;
 }
 
-.dropzone {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    border: transparent dashed 5px;
-    opacity: inherit;
-    transition: border ease-in-out .3s;
-
-    &_active {
-        border: @color dashed 5px;
-    }
-}
-
-.dropzone__text {
+.text {
     cursor: pointer;
     transition: transform ease-in-out .3s;
 

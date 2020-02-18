@@ -1,0 +1,46 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.wave {
+    height: 70px;
+    width: 70px;
+    fill: #fff;
+    padding: 0 10px;
+
+    &_animated {
+        each(range(9), {
+            .line:nth-child(@{value}) {
+                animation-name: pulse;
+                animation-duration: .7s;
+                animation-iteration-count: infinite;
+            }
+        })
+    }
+}
+
+each(range(9), {
+    .line:nth-child(@{value}) {
+        animation-delay: @value * .15s;
+    }
+})
+
+@keyframes pulse {
+    0% {
+        transform: scaleY(1);
+        transform-origin: 50% 50%;
+    }
+
+    50% {
+        transform: scaleY(.7);
+        transform-origin: 50% 50%;
+    }
+
+    100% {
+        transform: scaleY(1);
+        transform-origin: 50% 50%;
+    }
+}

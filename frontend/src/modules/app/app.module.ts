@@ -17,6 +17,8 @@ import {UniversalStorage} from '../shared/storage/universal.storage';
 import {FileUploaderModule} from '../../components/fileUploader/fileUploader.module';
 import {RecorderModule} from '../../components/recorder/recorder.module';
 import {DropZoneModule} from '../../directives/dropZone/dropZone.module';
+import {RecognizeApiService} from '../../services/recognize.api.service';
+import {TranslateService} from '@ngx-translate/core';
 
 export function initLanguage(translateService: TranslatesService): Function {
     return (): Promise<any> => translateService.initLanguage();
@@ -39,6 +41,7 @@ export function initLanguage(translateService: TranslatesService): Function {
     providers: [
         CookieService,
         UniversalStorage,
+        RecognizeApiService,
         {provide: APP_INITIALIZER, useFactory: initLanguage, multi: true, deps: [TranslatesService]},
     ],
 })

@@ -4,6 +4,8 @@ import 'reflect-metadata';
 // for debug
 require('source-map-support').install();
 
+const proxy = require('http-proxy-middleware');
+
 // for tests
 const test = process.env['TEST'] === 'true';
 
@@ -64,6 +66,10 @@ const app = express();
 app.use(compression());
 // cokies
 app.use(cookieparser());
+
+// api
+
+app.use('/api', proxy({ target: 'http://localhost:8080', changeOrigin: true }));
 
 // redirects!
 const redirectowww = false;

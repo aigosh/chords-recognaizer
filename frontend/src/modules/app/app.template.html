@@ -8,7 +8,7 @@
         <div class="dropzone__border"></div>
     </div>
     <div class="wrapper">
-        <recorder class="recorder"></recorder>
+        <recorder class="recorder" (recorded)="onRecorded($event)"></recorder>
         <file-uploader class="file-uploader" (upload)="onUpload($event)"></file-uploader>
     </div>
 </div>

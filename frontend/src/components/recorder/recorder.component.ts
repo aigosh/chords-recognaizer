@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy,
-    Component,
+    Component, EventEmitter, Output,
 } from '@angular/core';
 import {MatIconRegistry} from '@angular/material';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -14,6 +14,8 @@ import {isNil} from '../../utils/util';
 })
 
 export class RecorderComponent {
+    @Output() recorded = new EventEmitter<Blob>();
+
     recording: boolean = false;
 
     private recordedChunks = [];
@@ -59,7 +61,7 @@ export class RecorderComponent {
         });
 
         this.mediaRecorder.addEventListener('stop', () => {
-            console.log(new File([new Blob(this.recordedChunks)], 'record.wav'));
+            this.recorded.emit(new Blob(this.recordedChunks, {'type':'audio/wav; codecs=opus'}));
         });
 
         this.mediaRecorder.start();

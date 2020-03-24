@@ -1,6 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 import {MetaService} from '@ngx-meta/core';
+import {from} from 'rxjs';
+import {mergeMap, switchMap} from 'rxjs/operators';
+import {RecognizeApiService} from '../../services/recognize.api.service';
 
 @Component({
     selector: 'app-root',
@@ -9,7 +12,8 @@ import {MetaService} from '@ngx-meta/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-    constructor(private readonly meta: MetaService) {
+    constructor(private readonly meta: MetaService,
+                private recognizer: RecognizeApiService) {
 
     }
 
@@ -19,6 +23,10 @@ export class AppComponent implements OnInit {
     }
 
     onUpload(files: File[]) {
-        console.log(files);
+        from(files).pipe(mergeMap(file => this.recognizer.recognize(file))).subscribe(() => console.log('success!'))
+    }
+
+    onRecorded(blob: Blob) {
+        this.onUpload([new File([blob], 'record.wav')])
     }
 }

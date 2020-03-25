@@ -19,6 +19,7 @@ import {RecorderModule} from '../../components/recorder/recorder.module';
 import {DropZoneModule} from '../../directives/dropZone/dropZone.module';
 import {RecognizeApiService} from '../../services/recognize.api.service';
 import {TranslateService} from '@ngx-translate/core';
+import {CommonModule} from '@angular/common';
 
 export function initLanguage(translateService: TranslatesService): Function {
     return (): Promise<any> => translateService.initLanguage();
@@ -26,6 +27,7 @@ export function initLanguage(translateService: TranslatesService): Function {
 
 @NgModule({
     imports: [
+        CommonModule,
         BrowserModule.withServerTransition({appId: 'my-app'}),
         TransferHttpCacheModule,
         HttpClientModule,

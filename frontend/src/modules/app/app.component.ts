@@ -1,17 +1,19 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 import {MetaService} from '@ngx-meta/core';
-import {from} from 'rxjs';
-import {mergeMap, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, from} from 'rxjs';
+import {concatMap, map, mergeMap, reduce, switchMap} from 'rxjs/operators';
 import {RecognizeApiService} from '../../services/recognize.api.service';
 
 @Component({
     selector: 'app-root',
-    styleUrls: ["app.style.less"],
-    templateUrl: "app.template.html",
+    styleUrls: ['app.style.less'],
+    templateUrl: 'app.template.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
+    readonly chords$ = new BehaviorSubject(null);
+
     constructor(private readonly meta: MetaService,
                 private recognizer: RecognizeApiService) {
 
@@ -23,10 +25,17 @@ export class AppComponent implements OnInit {
     }
 
     onUpload(files: File[]) {
-        from(files).pipe(mergeMap(file => this.recognizer.recognize(file))).subscribe(() => console.log('success!'))
+        this.chords$.next(null);
+
+        from(files).pipe(
+            concatMap(file => this.recognizer.recognize(file)),
+            reduce((acc, response) => [...acc, response.chord], []),
+        ).subscribe(chords => {
+            this.chords$.next(chords);
+        });
     }
 
     onRecorded(blob: Blob) {
-        this.onUpload([new File([blob], 'record.wav')])
+        this.onUpload([new File([blob], 'record.wav')]);
     }
 }

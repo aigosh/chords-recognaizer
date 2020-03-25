@@ -8,15 +8,11 @@ export class RecognizeApiService {
     constructor(private http: HttpClient) {
     }
 
-    recognize(file: File): Observable<void> {
+    recognize(file: File): Observable<{success: boolean, chord: string}> {
         const formData = new FormData();
 
         formData.append('file', new Blob([file]));
 
-        return this.http.post<void>('/api/v1/recognize', formData, {
-            // headers: {
-            //     'Content-Type': 'multipart/form-data'
-            // }
-        });
+        return this.http.post<{success: boolean, chord: string}>('/api/v1/recognize', formData);
     }
 }

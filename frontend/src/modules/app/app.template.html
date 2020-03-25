@@ -10,5 +10,8 @@
     <div class="wrapper">
         <recorder class="recorder" (recorded)="onRecorded($event)"></recorder>
         <file-uploader class="file-uploader" (upload)="onUpload($event)"></file-uploader>
+        <div class="result" *ngIf="chords$ |  async">
+           Chords: <span *ngFor="let chord of chords$ | async" class="chord">{{chord}}</span>
+        </div>
     </div>
 </div>

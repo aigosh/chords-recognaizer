@@ -61,7 +61,7 @@ export class RecorderComponent {
         });
 
         this.mediaRecorder.addEventListener('stop', () => {
-            this.recorded.emit(new Blob(this.recordedChunks, {'type':'audio/wav; codecs=opus'}));
+            this.recorded.emit(new Blob(this.recordedChunks, {'type' : 'audio/wav; codecs=MS_PCM' }));
         });
 
         this.mediaRecorder.start();

@@ -21,7 +21,7 @@ class Recognize(Resource):
     with open('model', 'rb') as f:
         clf = pickle.load(f)
 
-    def get_chord(input_file):
+    def get_chord(y, sr):
         # print(input_file)
         import numpy as np
         from librosa import display
@@ -44,7 +44,7 @@ class Recognize(Resource):
             # Make a self-loop transition matrix over 25 states
             trans = librosa.sequence.transition_loop(25, 0.9)
             # Load in audio and make features
-            y, sr = librosa.load(input_file)
+            # y, sr = librosa.load(input_file)
             chroma = librosa.feature.chroma_cens(y=y, sr=sr, bins_per_octave=36)
             # Map chroma (observations) to class (state) likelihoods
             probs = np.exp(weights.dot(chroma))  # P[class | chroma] proportional to exp(template' chroma)
@@ -60,9 +60,12 @@ class Recognize(Resource):
         # audioFile = args['file']
         # audioFile.save("audio.wav")
         try:
-            chord = clf.predict([get_chord(args['file'])])
-            chord = i2class[chord]
-            return {'success': True}, chord
+            res = []
+            y, sr = librosa.load(args['file'])
+            for i in range(0, len(y), 40000):
+                chord = clf.predict([get_chord(y[i:i + 40000], sr)])
+                res.append(i2class[chord[0]])                
+            return {'success': True}, res
         except:
             return {'success': False}, 200
 

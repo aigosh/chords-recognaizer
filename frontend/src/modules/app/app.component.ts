@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
 
         from(files).pipe(
             concatMap(file => this.recognizer.recognize(file)),
-            reduce((acc, response) => [...acc, response.chord], []),
+            reduce((acc, response) => [...acc, ...response.chords], []),
         ).subscribe(chords => {
             this.chords$.next(chords);
         });

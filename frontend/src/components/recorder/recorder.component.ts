@@ -1,10 +1,12 @@
 import {
-    ChangeDetectionStrategy,
-    Component, EventEmitter, Output,
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, EventEmitter, Inject, Output,
 } from '@angular/core';
 import {MatIconRegistry} from '@angular/material';
 import {DomSanitizer} from '@angular/platform-browser';
 import {isNil} from '../../utils/util';
+import Recorder from 'recorder-js';
+import {DOCUMENT} from '@angular/common';
 
 @Component({
     selector: 'recorder',
@@ -12,16 +14,17 @@ import {isNil} from '../../utils/util';
     templateUrl: 'recorder.template.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class RecorderComponent {
     @Output() recorded = new EventEmitter<Blob>();
 
     recording: boolean = false;
 
-    private recordedChunks = [];
-    private mediaRecorder: MediaRecorder = null;
+    private mediaRecorder: Recorder = null;
 
-    constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    constructor(@Inject(DOCUMENT) private document: Document,
+                private cd: ChangeDetectorRef,
+                iconRegistry: MatIconRegistry,
+                sanitizer: DomSanitizer) {
         iconRegistry.addSvgIcon(
             'stop',
             sanitizer.bypassSecurityTrustResourceUrl('assets/icon/stop.svg'));
@@ -30,12 +33,14 @@ export class RecorderComponent {
             sanitizer.bypassSecurityTrustResourceUrl('assets/icon/play_arrow.svg'));
     }
 
+    get window(): Window {
+        return this.document.defaultView;
+    }
+
     record() {
         if (this.recording) {
             return;
         }
-
-        this.recording = true;
 
         navigator.mediaDevices.getUserMedia({ audio: true, video: false })
             .then(this.handleRecord.bind(this));
@@ -46,25 +51,29 @@ export class RecorderComponent {
             return;
         }
 
-        this.mediaRecorder.stop();
-        this.recording = false;
+        this.mediaRecorder.stop().then(({blob}) => {
+            this.recording = false;
+            this.cd.markForCheck();
+            this.recorded.emit(blob);
+        });
     }
 
     private handleRecord(stream: MediaStream) {
-        const options = {mimeType: 'audio/webm'};
-        this.mediaRecorder = new MediaRecorder(stream, options);
+        const AudioContext = this.window['AudioContext'] || this.window['webkitAudioContext'];
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaStreamSource(stream);
 
-        this.mediaRecorder.addEventListener('dataavailable', (event: any) => {
-            if (event.data.size > 0) {
-                this.recordedChunks.push(event.data);
-            }
+        this.mediaRecorder = new Recorder(source.context, {
+            numChannels: 1
         });
-
-        this.mediaRecorder.addEventListener('stop', () => {
-            this.recorded.emit(new Blob(this.recordedChunks, {'type' : 'audio/wav; codecs=MS_PCM' }));
+        this.mediaRecorder.init(stream);
+        this.mediaRecorder.start().then(() => {
+            this.recording = true;
+            this.cd.markForCheck();
+        }, () => {
+            this.recording = false;
+            this.cd.markForCheck();
         });
-
-        this.mediaRecorder.start();
     }
 
 }

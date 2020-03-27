@@ -60,6 +60,7 @@
     "hammerjs": "^2.0.8",
     "http-proxy-middleware": "0.21.0",
     "node-cache": "5.1.0",
+    "recorder-js": "1.0.7",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.4",
     "rxjs-tslint": "0.1.7",

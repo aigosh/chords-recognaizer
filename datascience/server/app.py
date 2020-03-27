@@ -23,7 +23,7 @@ class Recognize(Resource):
         with open('model', 'rb') as f:
             self.clf = pickle.load(f)
 
-    def get_chord(self, input_file):
+    def get_chord(self, sample, sr):
         # print(input_file)
 
         # input_file = 'samples/e0.wav'
@@ -44,9 +44,7 @@ class Recognize(Resource):
             weights[-1] = N_template  # the last row is the no-chord class
             # Make a self-loop transition matrix over 25 states
             trans = librosa.sequence.transition_loop(25, 0.9)
-            # Load in audio and make features
-            y, sr = librosa.load(input_file)
-            chroma = librosa.feature.chroma_cens(y=y, sr=sr, bins_per_octave=36)
+            chroma = librosa.feature.chroma_cens(y=sample, sr=sr, bins_per_octave=36)
             # Map chroma (observations) to class (state) likelihoods
             probs = np.exp(weights.dot(chroma))  # P[class | chroma] proportional to exp(template' chroma)
             probs /= probs.sum(axis=0, keepdims=True)  # probabilities must sum to 1 in each column
@@ -60,12 +58,14 @@ class Recognize(Resource):
         
         args = parse.parse_args()
         audioFile = args['file']
-        
         try:
-            chord = self.clf.predict([self.get_chord(audioFile)])[0]
-            chord = self.i2class[chord]
+            audio, sr = librosa.load(audioFile)
+            chords = []
+            for i in range(0, len(audio), 40000):
+                chord = self.clf.predict([self.get_chord(audio[i:i + 40000], sr)])
+                chords.append(self.i2class[chord[0]])
 
-            return {'success': True, 'chord': chord}
+            return {'success': True, 'chords': chords}
         except Exception as e:
             return {
                 'success': False,

@@ -8,11 +8,11 @@ export class RecognizeApiService {
     constructor(private http: HttpClient) {
     }
 
-    recognize(file: File): Observable<{success: boolean, chord: string}> {
+    recognize(file: File): Observable<{success: boolean, chords: string[]}> {
         const formData = new FormData();
 
         formData.append('file', new Blob([file]));
 
-        return this.http.post<{success: boolean, chord: string}>('/api/v1/recognize', formData);
+        return this.http.post<{success: boolean, chords: string[]}>('/api/v1/recognize', formData);
     }
 }
